@@ -9,8 +9,7 @@ export type DiscordAttachment = { renderPlaintextFilePreview: (props: Attachment
 
 function Attachment({ props, item: attachment, renderPlaintextFilePreview, canDeleteAttachments }: { props: AttachmentProps, item: DiscordAttachment, renderPlaintextFilePreview(props: AttachmentProps): React.ReactNode, canDeleteAttachments: boolean }) {
   const [ maxFileBytes ] = useData("maxFileBytes", 200_000_000);
-  
-
+    
   const [ error, setError ] = useStateDeps(() => attachment.item.originalItem.size > maxFileBytes, [ maxFileBytes ]);
 
   if (error) return (

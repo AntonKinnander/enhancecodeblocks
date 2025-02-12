@@ -969,7 +969,7 @@ var BdApi2, codeBlock, MessageAttachment, messageListItem, ECBlocks, src_default
           if (res)
             for (let attachment2 of res.props.items) {
               let { renderPlaintextFilePreview } = attachment2;
-              attachment2.renderPlaintextFilePreview = (props2) => BdApi2.React.createElement(attachment_default, { props: props2, item: attachment2, canDeleteAttachments: that.props.canDeleteAttachments, renderPlaintextFilePreview });
+              attachment2.renderPlaintextFilePreview = attachment2.item.originalItem.__enhancecodeblocks__ ??= (props2) => BdApi2.React.createElement(attachment_default, { props: props2, item: attachment2, canDeleteAttachments: that.props.canDeleteAttachments, renderPlaintextFilePreview });
             }
         }), BdApi2.DOM.addStyle(css_default), this.forceUpdateMessages();
       }

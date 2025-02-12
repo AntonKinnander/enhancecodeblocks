@@ -45,7 +45,8 @@ class ECBlocks implements Plugin {
       for (const attachment of res.props.items) {                
         const { renderPlaintextFilePreview } = attachment;
 
-        attachment.renderPlaintextFilePreview = (props) => (
+        // @ts-expect-error
+        attachment.renderPlaintextFilePreview = attachment.item.originalItem.__enhancecodeblocks__ ??= (props) => (
           <Attachment props={props} item={attachment} canDeleteAttachments={(that as any).props.canDeleteAttachments} renderPlaintextFilePreview={renderPlaintextFilePreview} />
         );
       }
