@@ -33,6 +33,9 @@ async function getInvite() {
 };
 
 async function joinGuild() {
+  BdApi.UI.showInviteModal(GUILD_CONSTANT.invite);
+  return;
+
   const guild = GuildStore.getGuild(GUILD_CONSTANT.guildId);
   if (guild) {
     BdApi.UI.showToast(`Going to ${guild.name}`, { icon: true, type: "info" });    

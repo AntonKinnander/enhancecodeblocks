@@ -3,7 +3,7 @@ import React from "react";
 export { default as Icon } from "./icon";
 export { default as SettingItem } from "./settingsItem";
 
-export const ModalRoot = BdApi.Webpack.getModule(m => m.ModalRoot).ModalRoot;
+export const ModalRoot = BdApi.Webpack.getByStrings("reducedMotion:", "transitionState:", "small", "dialog", { searchExports: true });
 
 export const Spinner = BdApi.Webpack.getModule(m => m.Type?.PULSING_ELLIPSIS, { searchExports: true }) as React.ComponentClass<{ type: string }> & { Type: { WANDERING_CUBES: "string" }};
 
@@ -25,7 +25,7 @@ type Tooltip = React.ComponentClass<{
 const foundToolTip = BdApi.Webpack.getModule(m => m.prototype?.setDomElement && m.prototype.render.toString().includes("renderTooltip()"), { searchExports: true }) as Tooltip | undefined;
 export const Tooltip = foundToolTip ? foundToolTip : (BdApi.Components.Tooltip as Tooltip);
 
-export const Switch = BdApi.Webpack.getModule(BdApi.Webpack.Filters.byStrings("focusProps:", ",tooltipNote:", ".Switch,"), { searchExports: true }) as React.ComponentClass<{
+export const Switch = BdApi.Webpack.getModule(BdApi.Webpack.Filters.byStrings("focusProps:", ",tooltipNote:"), { searchExports: true }) as React.ComponentClass<{
   children: React.ReactNode,
   note?: React.ReactNode,
   style?: React.CSSProperties,

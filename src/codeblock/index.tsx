@@ -12,7 +12,10 @@ import { debounce } from "../util";
 
 const { thin } = BdApi.Webpack.getModule(m => m.thin && m.none) as { thin: string };
 
-const openModal = BdApi.Webpack.getModule(m => m.openModal && m.closeModal).openModal as (cb: (props: {
+const openModal = BdApi.Webpack.getMangled("onCloseRequest:null!=", {
+  openModal: BdApi.Webpack.Filters.byStrings("onCloseRequest:null!="),
+  closeModal: BdApi.Webpack.Filters.byStrings(".setState", ".getState()[")
+}).openModal as (cb: (props: {
   onClose: () => void,
   transitionState: null | number
 }) => React.ReactNode) => string;
