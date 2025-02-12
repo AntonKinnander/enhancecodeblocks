@@ -1,7 +1,7 @@
 /**
  * @name enhancecodeblocks
  * @description Enhances Discords Codeblocks & Text File Attachments
- * @version 1.0.25
+ * @version 1.0.26
  * @author Doggybootsy
  */
 "use strict";
