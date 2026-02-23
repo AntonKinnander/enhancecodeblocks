@@ -1,8 +1,8 @@
 import React, { memo } from "react";
 import hljs, { Language } from "highlight.js";
-import { useMessages } from "../hooks";
+import { message } from "../util";
 
-const SearchPopout = BdApi.Webpack.getModule(m => m.toString?.().includes(".Messages.AUTOCOMPLETE_NO_RESULTS_HEADER"), { searchExports: true }) as React.ComponentClass<{
+const SearchPopout = BdApi.Webpack.getModule(m => m.toString?.().includes("4o4z3e\"]"), { searchExports: true }) as React.ComponentClass<{
   autoFocus: true,
   className: string,
   multiSelect: boolean,
@@ -11,11 +11,13 @@ const SearchPopout = BdApi.Webpack.getModule(m => m.toString?.().includes(".Mess
   value: Set<string>,
   children: (searchValue: string) => JSX.Element[]
 }>;
+
 const SearchItem = BdApi.Webpack.getModule(m => m.Checkbox && m.Checkmark, { searchExports: true }) as React.ComponentClass<{
   value: string,
   children: React.ReactNode
 }> & { Label: React.ComponentClass<{ children: React.ReactNode }> };
-const { languageSelector } = BdApi.Webpack.getModule(m => m.languageSelector && m.codeIcon) as { languageSelector: string };
+
+const { languageSelector } = BdApi.Webpack.getModule(m => m.languageSelector && m.fileName) as { languageSelector: string };
 
 const LANGUAGES = hljs.listLanguages().map(name => {
   const lang = hljs.getLanguage(name) as Language;
@@ -39,15 +41,13 @@ function getContent(searchValue: string) {
 };
 
 function ChangeLang({ value, onChange }: { value: string, onChange: (value: string) => void }) {
-  const messages = useMessages();
-
   return (
     <SearchPopout
       autoFocus={true}
       className={languageSelector}
       multiSelect={false}
       onChange={onChange}
-      placeholder={messages.PREVIEW_CHANGE_LANGUAGE}
+      placeholder={message("utm4qs" || "PREVIEW_CHANGE_LANGUAGE")}
       value={new Set([ value.toLowerCase() ])}
     >{(searchValue) => getContent(searchValue)}</SearchPopout>
   )

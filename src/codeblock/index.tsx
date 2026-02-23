@@ -12,9 +12,13 @@ import { debounce } from "../util";
 
 const { thin } = BdApi.Webpack.getModule(m => m.thin && m.none) as { thin: string };
 
-const openModal = BdApi.Webpack.getMangled("onCloseRequest:null!=", {
-  openModal: BdApi.Webpack.Filters.byStrings("onCloseRequest:null!="),
-  closeModal: BdApi.Webpack.Filters.byStrings(".setState", ".getState()[")
+const openModal = BdApi.Webpack.getMangled("?.stackNextByDefault", {
+  openModal: BdApi.Webpack.Filters.byStrings("?.stackNextByDefault"),
+  closeModal: BdApi.Webpack.Filters.byStrings(".setState", ".getState()["),
+  closeAllModals: BdApi.Webpack.Filters.byStrings(".getState();for")
+}, {
+  firstId: 192308,
+  cacheId: "betterdiscord-modals"
 }).openModal as (cb: (props: {
   onClose: () => void,
   transitionState: null | number

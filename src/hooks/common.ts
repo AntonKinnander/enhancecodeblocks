@@ -13,10 +13,3 @@ export function useStateDeps<T>(initialState: T | (() => T), deps: React.Depende
 
   return [ state, setState ];
 };
-
-const intl = BdApi.Webpack.getModule(m => m.Messages) as {
-  Messages: Record<string, string>
-};
-export function useMessages() {
-  return intl.Messages;
-};

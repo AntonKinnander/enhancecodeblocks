@@ -6,12 +6,12 @@ import type { SpringValue } from "@react-spring/web";
 import { Tooltip, Icon, Popout } from "../components";
 
 import ChangeLang from "./changeLang";
-import { useMessages } from "../hooks";
-import { formatBytes } from "../util";
+import { formatBytes, message } from "../util";
 
 function Header({ angle, collapsed, setCollapsed, languageName, isSVG, showPreview, setShowPreview, copied, downloadAction, copyAction, enlargeAction, modal, setLang, remove, bytes, loading }: { angle: SpringValue<number>, collapsed: boolean, setCollapsed: (v: boolean) => void, languageName: string, isSVG: boolean, showPreview: boolean, setShowPreview: (v: boolean) => void, copied: boolean, downloadAction: () => void, copyAction: () => void, enlargeAction: () => void, modal: boolean, setLang: (lang: string) => void, remove?: (() => void) | false, bytes: number, loading?: boolean }) {
   const [ shouldShow, setShouldShow ] = React.useState(false);
-  const messages = useMessages();  
+
+  const targetElementRef = React.useRef<HTMLDivElement>(null);
   
   const formattedBytes = useMemo(() => formatBytes(bytes), [ bytes ]);
 
@@ -34,6 +34,7 @@ function Header({ angle, collapsed, setCollapsed, languageName, isSVG, showPrevi
           </ReactSpring.animated.div>
         )}
         <Popout
+          targetElementRef={targetElementRef}
           renderPopout={() => (
             <ChangeLang value={languageName} onChange={(value) => {
               setShouldShow(false);
@@ -49,7 +50,7 @@ function Header({ angle, collapsed, setCollapsed, languageName, isSVG, showPrevi
           onRequestClose={() => setShouldShow(false)}
         >
           {(props) => (
-            <div className="ECBlock-lang" {...props} onClick={(event) => {
+            <div className="ECBlock-lang" ref={targetElementRef} {...props} onClick={(event) => {
               setShouldShow(!shouldShow);
               if (props.onClick) props.onClick(event);
             }}>{languageName}</div>
@@ -62,7 +63,7 @@ function Header({ angle, collapsed, setCollapsed, languageName, isSVG, showPrevi
         )}
       </div>
       <div className="ECBlock-actions">
-        {remove && <Tooltip text={messages.DELETE} hideOnClick={false}>
+        {remove && <Tooltip text={message("oyYWHE" || "DELETE")} hideOnClick={false}>
           {(props) => (
             <div className="ECBlock-remove" {...props} onClick={remove}>
               <Icon size={22} name="trash" />
@@ -78,21 +79,21 @@ function Header({ angle, collapsed, setCollapsed, languageName, isSVG, showPrevi
             )}
           </Tooltip>
         )}
-        <Tooltip text={messages.DOWNLOAD} hideOnClick={false}>
+        <Tooltip text={message("1WjMbC" || "DOWNLOAD")} hideOnClick={false}>
           {(props) => (
             <div className="ECBlock-downloadButton" {...props} onClick={downloadAction}>
               <Icon size={22} name="download" />
             </div>
           )}
         </Tooltip>
-        <Tooltip text={copied ? messages.COPIED : messages.COPY} hideOnClick={false}>
+        <Tooltip text={copied ? message("t5VZ88" || "COPIED") : message("OpuAlK" || "COPY")} hideOnClick={false}>
           {(props) => (
             <div className={`ECBlock-copyButton${copied ? " ECBlock-copied" : ""}`} {...props} onClick={copyAction}>
               <Icon size={22} name="copy" />
             </div>
           )}
         </Tooltip>
-        {!modal && <Tooltip text={messages.PREVIEW_WHOLE_FILE} hideOnClick={false}>
+        {!modal && <Tooltip text={message("0PQYk3" || "PREVIEW_WHOLE_FILE")} hideOnClick={false}>
           {(props) => (
             <div className="ECBlock-enlarge" {...props} onClick={enlargeAction}>
               <Icon size={22} name="enlarge" />

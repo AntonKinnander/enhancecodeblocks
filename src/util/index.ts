@@ -34,3 +34,9 @@ export function formatBytes(bytes: number): string {
 
   return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${[ "", "K", "M" ][i]}B`;
 };
+
+const intl = BdApi.Webpack.getModule(m => m.t && m.intl);
+
+export function message(key: string) {
+  return intl.intl.string(intl.t[key]);
+}

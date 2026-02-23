@@ -1,7 +1,7 @@
 /**
  * @name enhancecodeblocks
  * @description Enhances Discords Codeblocks & Text File Attachments
- * @version 1.0.26
+ * @version 1.0.27
  * @author Doggybootsy
  */
 "use strict";
@@ -248,14 +248,10 @@ function useStateDeps(initialState, deps) {
   let [state, setState] = (0, import_react.useState)(initialState);
   return (0, import_react.useLayoutEffect)(() => setState(initialState), deps), [state, setState];
 }
-function useMessages() {
-  return intl.Messages;
-}
-var import_react, intl, init_common = __esm({
+var import_react, init_common = __esm({
   "src/hooks/common.ts"() {
     "use strict";
     import_react = __toESM(require_react());
-    intl = BdApi.Webpack.getModule((m) => m.Messages);
   }
 });
 
@@ -287,11 +283,15 @@ function formatBytes(bytes) {
   let i = Math.floor(Math.log(bytes) / Math.log(1024));
   return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${["", "K", "M"][i]}B`;
 }
-var import_react2, domParser, init_util = __esm({
+function message(key) {
+  return intl.intl.string(intl.t[key]);
+}
+var import_react2, domParser, intl, init_util = __esm({
   "src/util/index.ts"() {
     "use strict";
     import_react2 = __toESM(require_react());
     domParser = new DOMParser();
+    intl = BdApi.Webpack.getModule((m) => m.t && m.intl);
   }
 });
 
@@ -522,7 +522,6 @@ function getContent(searchValue) {
   })).filter(({ aliases }) => aliases.find((alias) => alias.toLowerCase().includes(searchValue.toLocaleLowerCase()))).map(({ component }) => component);
 }
 function ChangeLang({ value, onChange }) {
-  let messages = useMessages();
   return BdApi.React.createElement(
     SearchPopout,
     {
@@ -530,7 +529,7 @@ function ChangeLang({ value, onChange }) {
       className: languageSelector,
       multiSelect: !1,
       onChange,
-      placeholder: messages.PREVIEW_CHANGE_LANGUAGE,
+      placeholder: message("utm4qs"),
       value: /* @__PURE__ */ new Set([value.toLowerCase()])
     },
     (searchValue) => getContent(searchValue)
@@ -540,8 +539,8 @@ var import_react9, import_highlight2, SearchPopout, SearchItem, languageSelector
   "src/codeblock/changeLang.tsx"() {
     "use strict";
     import_react9 = __toESM(require_react()), import_highlight2 = __toESM(require_highlight());
-    init_hooks();
-    SearchPopout = BdApi.Webpack.getModule((m) => m.toString?.().includes(".Messages.AUTOCOMPLETE_NO_RESULTS_HEADER"), { searchExports: !0 }), SearchItem = BdApi.Webpack.getModule((m) => m.Checkbox && m.Checkmark, { searchExports: !0 }), { languageSelector } = BdApi.Webpack.getModule((m) => m.languageSelector && m.codeIcon), LANGUAGES = import_highlight2.default.listLanguages().map((name) => {
+    init_util();
+    SearchPopout = BdApi.Webpack.getModule((m) => m.toString?.().includes('4o4z3e"]'), { searchExports: !0 }), SearchItem = BdApi.Webpack.getModule((m) => m.Checkbox && m.Checkmark, { searchExports: !0 }), { languageSelector } = BdApi.Webpack.getModule((m) => m.languageSelector && m.fileName), LANGUAGES = import_highlight2.default.listLanguages().map((name) => {
       let lang = import_highlight2.default.getLanguage(name);
       return {
         lang,
@@ -555,7 +554,7 @@ var import_react9, import_highlight2, SearchPopout, SearchItem, languageSelector
 
 // src/codeblock/header.tsx
 function Header({ angle, collapsed, setCollapsed, languageName, isSVG, showPreview, setShowPreview, copied, downloadAction, copyAction, enlargeAction, modal, setLang, remove, bytes, loading }) {
-  let [shouldShow, setShouldShow] = import_react10.default.useState(!1), messages = useMessages(), formattedBytes = (0, import_react10.useMemo)(() => formatBytes(bytes), [bytes]);
+  let [shouldShow, setShouldShow] = import_react10.default.useState(!1), targetElementRef = import_react10.default.useRef(null), formattedBytes = (0, import_react10.useMemo)(() => formatBytes(bytes), [bytes]);
   return BdApi.React.createElement("div", { className: "ECBlock-header" }, BdApi.React.createElement("div", { className: "ECBlock-title" }, !modal && BdApi.React.createElement(import_react_spring2.default.animated.div, { style: {
     transform: angle.to({
       output: ["rotate(180deg)", "rotate(270deg)"]
@@ -563,6 +562,7 @@ function Header({ angle, collapsed, setCollapsed, languageName, isSVG, showPrevi
   } }, BdApi.React.createElement(Tooltip, { text: collapsed ? "Collapsed" : "Uncollapse", hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: "ECBlock-collapse", ...props, onClick: () => setCollapsed(!collapsed) }, BdApi.React.createElement(icon_default, { size: 22, name: "arrow" })))), BdApi.React.createElement(
     Popout,
     {
+      targetElementRef,
       renderPopout: () => BdApi.React.createElement(changeLang_default, { value: languageName, onChange: (value) => {
         setShouldShow(!1), setLang(value);
       } }),
@@ -574,10 +574,10 @@ function Header({ angle, collapsed, setCollapsed, languageName, isSVG, showPrevi
       nudgeAlignIntoViewport: !0,
       onRequestClose: () => setShouldShow(!1)
     },
-    (props) => BdApi.React.createElement("div", { className: "ECBlock-lang", ...props, onClick: (event) => {
+    (props) => BdApi.React.createElement("div", { className: "ECBlock-lang", ref: targetElementRef, ...props, onClick: (event) => {
       setShouldShow(!shouldShow), props.onClick && props.onClick(event);
     } }, languageName)
-  ), !loading && BdApi.React.createElement(Tooltip, { text: `${bytes} B`, hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: "ECBlock-byteSize", ...props }, formattedBytes))), BdApi.React.createElement("div", { className: "ECBlock-actions" }, remove && BdApi.React.createElement(Tooltip, { text: messages.DELETE, hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: "ECBlock-remove", ...props, onClick: remove }, BdApi.React.createElement(icon_default, { size: 22, name: "trash" }))), isSVG && BdApi.React.createElement(Tooltip, { text: "Preview", hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: `ECBlock-previewButton${showPreview ? " ECBlock-active" : ""}`, ...props, onClick: () => setShowPreview(!showPreview) }, BdApi.React.createElement(icon_default, { size: 22, name: "eye" }))), BdApi.React.createElement(Tooltip, { text: messages.DOWNLOAD, hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: "ECBlock-downloadButton", ...props, onClick: downloadAction }, BdApi.React.createElement(icon_default, { size: 22, name: "download" }))), BdApi.React.createElement(Tooltip, { text: copied ? messages.COPIED : messages.COPY, hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: `ECBlock-copyButton${copied ? " ECBlock-copied" : ""}`, ...props, onClick: copyAction }, BdApi.React.createElement(icon_default, { size: 22, name: "copy" }))), !modal && BdApi.React.createElement(Tooltip, { text: messages.PREVIEW_WHOLE_FILE, hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: "ECBlock-enlarge", ...props, onClick: enlargeAction }, BdApi.React.createElement(icon_default, { size: 22, name: "enlarge" })))));
+  ), !loading && BdApi.React.createElement(Tooltip, { text: `${bytes} B`, hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: "ECBlock-byteSize", ...props }, formattedBytes))), BdApi.React.createElement("div", { className: "ECBlock-actions" }, remove && BdApi.React.createElement(Tooltip, { text: message("oyYWHE"), hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: "ECBlock-remove", ...props, onClick: remove }, BdApi.React.createElement(icon_default, { size: 22, name: "trash" }))), isSVG && BdApi.React.createElement(Tooltip, { text: "Preview", hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: `ECBlock-previewButton${showPreview ? " ECBlock-active" : ""}`, ...props, onClick: () => setShowPreview(!showPreview) }, BdApi.React.createElement(icon_default, { size: 22, name: "eye" }))), BdApi.React.createElement(Tooltip, { text: message("1WjMbC"), hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: "ECBlock-downloadButton", ...props, onClick: downloadAction }, BdApi.React.createElement(icon_default, { size: 22, name: "download" }))), BdApi.React.createElement(Tooltip, { text: copied ? message("t5VZ88") : message("OpuAlK"), hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: `ECBlock-copyButton${copied ? " ECBlock-copied" : ""}`, ...props, onClick: copyAction }, BdApi.React.createElement(icon_default, { size: 22, name: "copy" }))), !modal && BdApi.React.createElement(Tooltip, { text: message("0PQYk3"), hideOnClick: !1 }, (props) => BdApi.React.createElement("div", { className: "ECBlock-enlarge", ...props, onClick: enlargeAction }, BdApi.React.createElement(icon_default, { size: 22, name: "enlarge" })))));
 }
 var import_react10, import_react_spring2, header_default, init_header = __esm({
   "src/codeblock/header.tsx"() {
@@ -585,7 +585,6 @@ var import_react10, import_react_spring2, header_default, init_header = __esm({
     import_react10 = __toESM(require_react()), import_react_spring2 = __toESM(require_react_spring());
     init_components();
     init_changeLang();
-    init_hooks();
     init_util();
     header_default = (0, import_react10.memo)(Header);
   }
@@ -709,9 +708,13 @@ var import_react14, import_react_spring3, thin, openModal, codeblock_default, in
     init_components();
     init_data();
     init_util();
-    ({ thin } = BdApi.Webpack.getModule((m) => m.thin && m.none)), openModal = BdApi.Webpack.getMangled("onCloseRequest:null!=", {
-      openModal: BdApi.Webpack.Filters.byStrings("onCloseRequest:null!="),
-      closeModal: BdApi.Webpack.Filters.byStrings(".setState", ".getState()[")
+    ({ thin } = BdApi.Webpack.getModule((m) => m.thin && m.none)), openModal = BdApi.Webpack.getMangled("?.stackNextByDefault", {
+      openModal: BdApi.Webpack.Filters.byStrings("?.stackNextByDefault"),
+      closeModal: BdApi.Webpack.Filters.byStrings(".setState", ".getState()["),
+      closeAllModals: BdApi.Webpack.Filters.byStrings(".getState();for")
+    }, {
+      firstId: 192308,
+      cacheId: "betterdiscord-modals"
     }).openModal;
     codeblock_default = (0, import_react14.memo)(CodeBlock);
   }

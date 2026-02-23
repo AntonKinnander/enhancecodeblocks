@@ -52,7 +52,8 @@ export const Popout = BdApi.Webpack.getModule((m) => m.prototype?.render?.toStri
   spacing: number,
   autoInvert: boolean,
   nudgeAlignIntoViewport: boolean,
-  onRequestClose: () => void
+  onRequestClose: () => void;
+  targetElementRef: React.RefObject<HTMLElement>;
 }>;
 
 export class ErrorBoundary extends React.Component<
